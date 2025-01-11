@@ -1,2 +1,1 @@
 # volammo-ollama
-ollama ollelama
