@@ -14,7 +14,13 @@ import (
 
 // showLoadingWheel displays a loading spinner in the terminal.
 func showLoadingWheel(done chan bool) {
-	spinner := []rune{'|', '/', '-', '\\'}
+	spinner := []string{
+		"▪▫▫▫",
+		"▫▪▫▫",
+		"▫▫▪▫",
+		"▫▫▫▪",
+		"▫▫▫▫",
+	}
 	i := 0
 	for {
 		select {
@@ -23,8 +29,8 @@ func showLoadingWheel(done chan bool) {
 			return
 		default:
 			i = (i + 1) % len(spinner)
-			fmt.Printf("\rGenerating response... %c", spinner[i])
-			time.Sleep(100 * time.Millisecond)
+			fmt.Printf("\rGenerating response... %s", spinner[i])
+			time.Sleep(200 * time.Millisecond)
 		}
 	}
 }
@@ -40,7 +46,7 @@ func main() {
 	client := api.NewClient(baseURL, &http.Client{})
 
 	for {
-		fmt.Print("You: ")
+		fmt.Print("⮑ : ")
 		if !scanner.Scan() {
 			fmt.Println("Error reading input. Exiting.")
 			break
