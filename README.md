@@ -1,1 +1,3 @@
-# volammo-ollama
+# AI Techtonic
+
+Building foundation.
