@@ -1,4 +1,4 @@
-module github.com/himaatluri/volammo-ollama
+module github.com/himaatluri/r-ai-tectonic
 
 go 1.23.4
 
