@@ -18,12 +18,12 @@ func ShowLoadingWheel(done chan bool) {
 	for {
 		select {
 		case <-done:
-			fmt.Print("\r")
+			fmt.Print("\r\r\n")
 			return
 		default:
 			i = (i + 1) % len(spinner)
 			fmt.Printf("\rGenerating response... %s", spinner[i])
-			time.Sleep(200 * time.Millisecond)
+			time.Sleep(170 * time.Millisecond)
 		}
 	}
 }
@@ -31,7 +31,7 @@ func ShowLoadingWheel(done chan bool) {
 func StreamResponse(input string) {
 	for _, w := range strings.Fields(input) {
 		fmt.Print(w + " ")
-		time.Sleep(50 * time.Millisecond)
+		time.Sleep(10 * time.Millisecond)
 	}
 	fmt.Print("\n")
 }

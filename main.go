@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"context"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -21,7 +20,7 @@ func main() {
 	client := api.NewClient(baseURL, &http.Client{})
 
 	for {
-		fmt.Print("⮑ : ")
+		fmt.Print("🤖 : ")
 		if !scanner.Scan() {
 			fmt.Println("Error reading input. Exiting.")
 			break
@@ -34,36 +33,15 @@ func main() {
 		}
 
 		if filename, matchedType := helpers.DetectDocInference(userInput); matchedType {
-			fmt.Println("Document based inference comming soon.. to analyze this file: ", filename)
-		}
-
-		done := make(chan bool)
-		go helpers.ShowLoadingWheel(done)
-
-		// Send the request to the Ollama API
-		var response string
-		err := client.Generate(context.Background(), &api.GenerateRequest{
-			Model:  "phi4",
-			Prompt: userInput,
-		}, func(cr api.GenerateResponse) error {
-			if cr.Response != "" {
-				response += cr.Response
+			fmt.Println("🗎 Document based inference")
+			fileInput, err := os.ReadFile(filename)
+			if err != nil {
+				fmt.Println(err)
 			}
-			return nil
-		})
-
-		done <- true
-
-		if err != nil {
-			fmt.Printf("Error sending request: %v\n", err)
+			helpers.InvokeChat(client, string(fileInput))
 			continue
 		}
 
-		if response == "" {
-			fmt.Println("Ollama: No response received.")
-		} else {
-			fmt.Print("Ollama: \n")
-			helpers.StreamResponse(response)
-		}
+		helpers.InvokeChat(client, userInput)
 	}
 }

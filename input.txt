@@ -1,0 +1,2 @@
+a = 99, b = 199
+calculate a^9*b*99
