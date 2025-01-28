@@ -10,20 +10,21 @@ import (
 func InvokeChat(client *api.Client, input string) {
 	done := make(chan bool)
 	go ShowLoadingWheel(done)
-
+	streamResp := true
 	// Send the request to the Ollama API
 	var response string
 	err := client.Generate(context.Background(), &api.GenerateRequest{
 		Model:  "phi4",
 		Prompt: input,
-	}, func(cr api.GenerateResponse) error {
-		if cr.Response != "" {
-			response += cr.Response
-		}
-		return nil
-	})
-
-	done <- true
+		Stream: &streamResp,
+	},
+		func(cr api.GenerateResponse) error {
+			if cr.Response != "" {
+				// fmt.Println(cr.Response)
+				response += cr.Response
+			}
+			return nil
+		})
 
 	if err != nil {
 		fmt.Printf("Error sending request: %v\n", err)
@@ -33,6 +34,7 @@ func InvokeChat(client *api.Client, input string) {
 		fmt.Println("Ollama: No response received.")
 	} else {
 		fmt.Print("Ollama: \n")
-		StreamResponse(response)
+		fmt.Print(response)
 	}
+	done <- true
 }
